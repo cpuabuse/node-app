@@ -1,0 +1,17 @@
+{
+  "name": "cpuabuse-app",
+  "version": "0.0.1",
+  "description": "App module",
+  "main": "app.js",
+  "dependencies": {
+    "cpuabuse-system": "0.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cpuabuse/node-app.git"
+  }
+}
