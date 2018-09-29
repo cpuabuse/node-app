@@ -4,7 +4,7 @@
   "description": "App module",
   "main": "app.js",
   "dependencies": {
-    "cpuabuse-system": "0.0.2"
+    "cpuabuse-system": "0.0.3"
   },
   "devDependencies": {},
   "scripts": {
