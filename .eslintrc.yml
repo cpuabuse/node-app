@@ -81,7 +81,6 @@ rules:
   new-parens: error
   newline-after-var: 'off'
   newline-before-return: 'off'
-  newline-per-chained-call: error
   no-alert: error
   no-array-constructor: 'off'
   no-async-promise-executor: error
@@ -121,6 +120,7 @@ rules:
     - ignore:
       - 0
       - 1
+      - -1
   no-misleading-character-class: error
   no-mixed-operators: error
   no-mixed-requires: error

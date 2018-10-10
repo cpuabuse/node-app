@@ -1,0 +1,15 @@
+system_load: # System loaded successfully
+  log: "System loaded"
+  behavior: true
+
+app_load: # System loaded successfully
+  log: "App loaded"
+  behavior: true
+
+# Behavior OPs
+behavior_attach: # Behavior added
+  log: "Behavior attached"
+behavior_attach_fail: # Behavior addition failed
+  log: "bad"
+behavior_attach_request_fail: # Processing behavior addition failed
+  log: "Behaviors were not attached. May be the system was meant to initialize without any?"

@@ -1,0 +1,6 @@
+hostname: "example.com"
+base_url: "latin-school.example.com/classes"
+folders:
+  nunjucks: "njk"
+  markdown: "md"
+  rc: "resources"

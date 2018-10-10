@@ -4,11 +4,17 @@
   "description": "App module",
   "main": "app.js",
   "dependencies": {
-    "cpuabuse-system": "0.0.3"
+    "cpuabuse-system": "^0.1.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "coveralls": "^3.0.2",
+    "eslint": "^5.6.1",
+    "istanbul": "^1.1.0-alpha.1",
+    "mocha": "^5.2.0"
+  },
   "scripts": {
-    "test": "exit"
+    "test": "node ./node_modules/mocha/bin/mocha && exit $?",
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly"
   },
   "repository": {
     "type": "git",
