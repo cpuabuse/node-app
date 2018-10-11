@@ -133,7 +133,6 @@ rules:
   no-nested-ternary: error
   no-new: error
   no-new-func: error
-  no-new-object: error
   no-new-require: error
   no-new-wrappers: error
   no-octal-escape: error

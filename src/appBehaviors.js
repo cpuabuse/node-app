@@ -38,7 +38,7 @@ var behaviors = [
 	}},
 	// App post-load routines
 	{"app_load": that => {
-		console.log(that);
+		console.log("app_load");
 	}}
 ];
 
