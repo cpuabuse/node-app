@@ -8,6 +8,7 @@ const system = require("cpuabuse-system");
 const app_initDir = "settings";
 const app_initFilename = "init";
 const behaviors = require("./appBehaviors.js");
+const resource = require("./resource.js");
 
 /**
  * Application
@@ -18,14 +19,12 @@ const behaviors = require("./appBehaviors.js");
  * @param {string} rootDir App root directory
  */
 class App extends system.System{
-	constructor (id, rootDir, appLoadBehavior){
+	constructor (id, rootDir, appLoadCallback){
 
 		// Call parents constructor with the default parameters for the App
 		let allBehaviors = behaviors;
-		appLoadBehavior = (that) => {
-			console.log(that);
-		}
-		allBehaviors.push({"app_load": appLoadBehavior});
+		allBehaviors.push({"app_load": appLoadCallback});
+
 		super(
 			{
 				id,
@@ -38,19 +37,9 @@ class App extends system.System{
 		);
 	}
 
-	processOperation(rcParentContext){
-		// Initialize current operation node
-		var rcContext = new Object();
-
-		if(rcParentContext){
-			// Chain the context
-			rcContext.parent = rcParentContext;
-			rcContext.depth = rcParentContext.depth + 1;
-		} else { // We assume this is the "root" invocation of the resource chain
-		// Process "root" resource context
-			rcContext.parent = null;
-			rcContext.depth = 0;
-		}
+	getResource(resourceName){
+		var resourceContext = new resource.ResourceContext(this, resourceName);
+		return resourceContext.process();
 	}
 }
 

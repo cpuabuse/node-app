@@ -1,0 +1,3 @@
+** Namespaces **
+
+- `rc` is used to reference the static resources of the app; resource is referencing the resource context of current request
