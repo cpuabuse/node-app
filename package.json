@@ -1,14 +1,14 @@
 {
   "name": "cpuabuse-app",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "App module",
   "main": "app.js",
   "dependencies": {
-    "cpuabuse-system": "^0.1.2"
+    "cpuabuse-system": "latest"
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
-    "eslint": "^5.7.0",
+    "eslint": "^5.8.0",
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^5.2.0"
   },
