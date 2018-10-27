@@ -1,8 +1,8 @@
 {
   "name": "cpuabuse-app",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "App module",
-  "main": "app.js",
+  "main": "src/app.js",
   "dependencies": {
     "cpuabuse-system": "latest"
   },
