@@ -6,7 +6,8 @@ const directives = {
 	primary: ["file"],
 	secondary: ["with", "as"],
 	in: ["in"],
-	out: ["out"]
+	out: ["out"],
+	aux: ["data","primaryCounter"] // Properties added to the object over which iteration is occurring may either be visited or omitted from iteration. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
 };
 const methods = {
 	/**
@@ -43,12 +44,12 @@ class ResourceContext extends system.AtomicLock{
 		if(appOrParent instanceof ResourceContext){
 			this.depth = appOrParent.depth + 1;
 			this.root = appOrParent.root;
-			this.data = this.root.parent.app.rc[name].main;
+			this.data = JSON.parse(JSON.stringify(this.root.parent.app.rc[name].main));
 		} else { // NOTE: Instance of App; since this file is to be called from App only, we assume there is no other instanceof possibility
 			this.depth = 0;
 			this.root = this;
 			this.parent = appOrParent;
-			this.data = Object.assign(appOrParent.app.rc[name].main);
+			this.data = JSON.parse(JSON.stringify(appOrParent.app.rc[name].main));
 		}
 		this.name = name;
 		this.directives = {
@@ -65,7 +66,6 @@ class ResourceContext extends system.AtomicLock{
 		this.data.forEach(operation => {
 			// Initialize primary directive counter
 			this.primary = false;
-
 			// Preprocess preparation
 			for (let directive in operation){ // For each directive in the data array element
 				if(directives.primary.includes(directive)){ // Primary directives
@@ -74,7 +74,7 @@ class ResourceContext extends system.AtomicLock{
 						if(operation.hasOwnProperty("primaryCounter")){
 							throw "some error";
 						}
-						operation.primaryCounter = {};
+						operation.primaryCounter = null;
 						this.release();
 
 						return methods[directive](this, operation);
@@ -85,8 +85,9 @@ class ResourceContext extends system.AtomicLock{
 					this.directives.in.push(() => methods[directive](this, operation));
 				} else if(directives.secondary.includes(directive)){
 					this.directives.push(() => methods[directive](this, operation));
-				} else {
-					throw "some error";
+				} else if(!directives.aux.includes(directive)){
+					console.log(directive);
+					throw "some error2";
 				}
 			} // <== for directive in operation
 		})
