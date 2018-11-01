@@ -1,0 +1,7 @@
+- in: raw
+- njk: words.njk
+  with:
+  - in:
+  - raw: '{"world":"world"}'
+  - out: object
+- out: raw

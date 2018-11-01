@@ -1,7 +1,7 @@
 - in: raw
 - scss:
   with:
-    - in: raw
-    - file: style.scss
-    - out: raw
+  - in: raw
+  - file: style.scss
+  - out: raw
 - out: raw

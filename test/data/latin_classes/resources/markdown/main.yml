@@ -1,7 +1,7 @@
 - in: raw
 - md:
   with:
-    - in: raw
-    - file: latin.md
-    - out: raw
+  - in: raw
+  - file: latin.md
+  - out: raw
 - out: raw

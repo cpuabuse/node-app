@@ -1,12 +1,30 @@
 "use strict";
 /** @event module:app.App~app_load */
+const resource = require("./resource.js");
+const nunjucks = require("nunjucks");
 
 var behaviors = [
 	// Initialize resources
 	{"system_load": that => {
 		// Declare structures
 		that.app = {
-			rc: {}
+			rc: {},
+			// FIXME: Add if njk exists error
+			njk: async(dir, file, args) => {
+				let path = await that.system.file.join(that.system.rootDir, dir);
+				var env = nunjucks.configure(path);
+
+				// Return promise hsould not be wrapped into promise
+				return new Promise(function(resolve){
+					env.render(file, args, function(err, res){
+						if(err){
+							throw "someerror3";
+						} else {
+							resolve(res);
+						}
+					});
+				})
+			}
 		};
 
 		// Anonymous async arrow function expression
@@ -38,7 +56,6 @@ var behaviors = [
 	}},
 	// App post-load routines
 	{"app_load": that => {
-		console.log("app_load");
 	}}
 ];
 

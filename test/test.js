@@ -10,4 +10,5 @@ new Promise(function(resolve){
 	example.getResource("index").then(data => console.log(data));
 	example.getResource("css").then(data => console.log(data));
 	example.getResource("markdown").then(data => console.log(data));
+	example.getResource("nunjucks").then(data => console.log(data));
 });

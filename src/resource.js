@@ -6,7 +6,7 @@ const system = require("cpuabuse-system");
 const sass = require("node-sass");
 const MarkdownIt = require("markdown-it");
 const directives = {
-	primary: ["file", "scss", "md"],
+	primary: ["file", "scss", "md", "njk", "raw"],
 	secondary: ["with", "as"],
 	in: ["in"],
 	out: ["out"],
@@ -23,30 +23,53 @@ const methods = {
 	},
 	async in(resource, operation){
 	},
-	async md(resource, operation){
+	async md(resource, operation){ /* eslint-disable-line require-await */// Preserving async throught directives
 		var markdown = new MarkdownIt();
-		operation.data = markdown.render(await operation._with);
+		operation.data = markdown.render(operation._with);
 	},
-	async scss(resource, operation){
+	async scss(resource, operation){ /* eslint-disable-line require-await */// Preserving async throught directives
 		let text = sass.renderSync({
-			data: await operation._with
+			data: operation._with
 		});
 
 		operation.data = text.css.toString("utf-8");
+	},
+	async njk(resource, operation){
+		console.log(operation)
+		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.rc, resource.name);
+		operation.data = await resource.root.parent.app.njk(path, operation.njk, operation.hasOwnProperty("_with") ? operation._with : null);
+	},
+	async raw(resource, operation){ /* eslint-disable-line require-await */// Preserving async throught directives
+		operation.data = operation.raw;
 	},
 	async with(resource, operation){
 		var resourceContext = new ResourceContext(resource, resource.name);
 		resourceContext.data = operation.with;
 		operation._with = await resourceContext.process();
+		console.log(operation)
 	},
-	out(resource){
+	out(resource, operation){
 		return new Promise(function(resolve){
 			Promise.all(resource.data.filter(function(operation){
 				return operation.hasOwnProperty("data");
 			}).map(function(operation){
 				return operation.data;
 			})).then(function(data){
-				resource.out = data.join();
+				switch(operation.out){
+					case "raw":
+					case "string":
+					case "":
+					case null:
+					resource.out = data.join();
+					break;
+
+					case "object":
+					resource.out = JSON.parse(data.join());
+					break;
+
+					default:
+					throw "error 4";
+				}
 				resolve();
 			})
 		});
@@ -103,7 +126,6 @@ class ResourceContext extends system.AtomicLock{
 				} else if(directives.secondary.includes(directive)){
 					this.directives.secondary.push(() => methods[directive](this, operation));
 				} else if(!directives.aux.includes(directive)){
-					console.log(directive);
 					throw "some error2";
 				}
 			} // <== for directive in operation
