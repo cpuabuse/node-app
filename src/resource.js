@@ -1,13 +1,16 @@
 // resource.js
 /* Contains class helper for resource operation processing */
+/* eslint no-underscore-dangle: ["error", { "allow": ["_with"] }] */// Allowing for the ouput of the directives
 "use strict";
 const system = require("cpuabuse-system");
+const sass = require("node-sass");
+const MarkdownIt = require("markdown-it");
 const directives = {
-	primary: ["file"],
+	primary: ["file", "scss", "md"],
 	secondary: ["with", "as"],
 	in: ["in"],
 	out: ["out"],
-	aux: ["data","primaryCounter"] // Properties added to the object over which iteration is occurring may either be visited or omitted from iteration. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
+	aux: ["data","primaryCounter", "_with"] // Properties added to the object over which iteration is occurring may either be visited or omitted from iteration. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
 };
 const methods = {
 	/**
@@ -18,10 +21,24 @@ const methods = {
 		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.rc, resource.name);
 		operation.data = resource.root.parent.system.file.getFile(path, operation.file);
 	},
-
 	async in(resource, operation){
 	},
+	async md(resource, operation){
+		var markdown = new MarkdownIt();
+		operation.data = markdown.render(await operation._with);
+	},
+	async scss(resource, operation){
+		let text = sass.renderSync({
+			data: await operation._with
+		});
 
+		operation.data = text.css.toString("utf-8");
+	},
+	async with(resource, operation){
+		var resourceContext = new ResourceContext(resource, resource.name);
+		resourceContext.data = operation.with;
+		operation._with = await resourceContext.process();
+	},
 	out(resource){
 		return new Promise(function(resolve){
 			Promise.all(resource.data.filter(function(operation){
@@ -44,7 +61,7 @@ class ResourceContext extends system.AtomicLock{
 		if(appOrParent instanceof ResourceContext){
 			this.depth = appOrParent.depth + 1;
 			this.root = appOrParent.root;
-			this.data = JSON.parse(JSON.stringify(this.root.parent.app.rc[name].main));
+			this.data = null;
 		} else { // NOTE: Instance of App; since this file is to be called from App only, we assume there is no other instanceof possibility
 			this.depth = 0;
 			this.root = this;
@@ -84,7 +101,7 @@ class ResourceContext extends system.AtomicLock{
 				} else if(directives.in.includes(directive)){
 					this.directives.in.push(() => methods[directive](this, operation));
 				} else if(directives.secondary.includes(directive)){
-					this.directives.push(() => methods[directive](this, operation));
+					this.directives.secondary.push(() => methods[directive](this, operation));
 				} else if(!directives.aux.includes(directive)){
 					console.log(directive);
 					throw "some error2";

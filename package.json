@@ -4,7 +4,9 @@
   "description": "App module",
   "main": "src/app.js",
   "dependencies": {
-    "cpuabuse-system": "latest"
+    "cpuabuse-system": "latest",
+    "markdown-it": "^8.4.2",
+    "node-sass": "^4.9.4"
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
