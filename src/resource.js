@@ -129,17 +129,17 @@ class ResourceContext extends system.AtomicLock{
 			} // <== for directive in operation
 		})
 
+		// Populate for default in: raw
+		// NOTE: Order of in then out is important, as referencing len-1 in async function for "out" will be evaluated during an actual call
+		if(this.directives.in.length == 0){
+			this.data.unshift({in: "raw"});
+			this.directives.in.push(() => methods.in(this, this.data[0]))
+		}
+
 		// Populate for default out: raw
 		if(this.directives.out.length == 0){
 			let len = this.data.push({out: "raw"});
 			this.directives.out.push(() => methods.out(this, this.data[len - 1]))
-			console.log(this.data);
-		}
-
-		// Populate for default in: raw
-		if(this.directives.in.length == 0){
-			let len = this.data.push({in: "raw"});
-			this.directives.in.push(() => methods.in(this, this.data[len - 1]))
 		}
 
 		// Call directives
