@@ -35,7 +35,6 @@ const methods = {
 		operation.data = text.css.toString("utf-8");
 	},
 	async njk(resource, operation){
-		console.log(operation)
 		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.rc, resource.name);
 		operation.data = await resource.root.parent.app.njk(path, operation.njk, operation.hasOwnProperty("_with") ? operation._with : null);
 	},
@@ -46,7 +45,6 @@ const methods = {
 		var resourceContext = new ResourceContext(resource, resource.name);
 		resourceContext.data = operation.with;
 		operation._with = await resourceContext.process();
-		console.log(operation)
 	},
 	out(resource, operation){
 		return new Promise(function(resolve){
@@ -60,11 +58,11 @@ const methods = {
 					case "string":
 					case "":
 					case null:
-					resource.out = data.join();
+					resource.out = data.join("");
 					break;
 
 					case "object":
-					resource.out = JSON.parse(data.join());
+					resource.out = JSON.parse(data.join(""));
 					break;
 
 					default:
@@ -130,6 +128,19 @@ class ResourceContext extends system.AtomicLock{
 				}
 			} // <== for directive in operation
 		})
+
+		// Populate for default out: raw
+		if(this.directives.out.length == 0){
+			let len = this.data.push({out: "raw"});
+			this.directives.out.push(() => methods.out(this, this.data[len - 1]))
+			console.log(this.data);
+		}
+
+		// Populate for default in: raw
+		if(this.directives.in.length == 0){
+			let len = this.data.push({in: "raw"});
+			this.directives.in.push(() => methods.in(this, this.data[len - 1]))
+		}
 
 		// Call directives
 		await Promise.all(this.directives.in.map(f => f())); // "in"

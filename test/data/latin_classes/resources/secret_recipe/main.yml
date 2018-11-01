@@ -1,0 +1,5 @@
+- file: index.html
+- md:
+  with:
+    - file: list.md
+- file: comment.html
