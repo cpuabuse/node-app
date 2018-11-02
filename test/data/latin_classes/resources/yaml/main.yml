@@ -1,0 +1,7 @@
+- in: raw
+- yml:
+  with:
+  - in: raw
+  - file: hello.yml
+- out: property
+  as: in

@@ -1,0 +1,6 @@
+- in: raw
+- yml:
+  with:
+  - file: words.yml
+- out: property
+  as: in

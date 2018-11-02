@@ -1,16 +1,16 @@
 // resource.js
 /* Contains class helper for resource operation processing */
-/* eslint no-underscore-dangle: ["error", { "allow": ["_with"] }] */// Allowing for the ouput of the directives
+/* eslint no-underscore-dangle: ["error", { "allow": ["_with", "_as"] }] */// Allowing for the ouput of the directives
 "use strict";
 const system = require("cpuabuse-system");
 const sass = require("node-sass");
 const MarkdownIt = require("markdown-it");
 const directives = {
-	primary: ["file", "scss", "md", "njk", "raw"],
+	primary: ["file", "scss", "md", "njk", "raw", "yml"],
 	secondary: ["with", "as"],
 	in: ["in"],
 	out: ["out"],
-	aux: ["data","primaryCounter", "_with"] // Properties added to the object over which iteration is occurring may either be visited or omitted from iteration. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
+	aux: ["data","primaryCounter", "_with", "_as"] // Properties added to the object over which iteration is occurring may either be visited or omitted from iteration. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
 };
 const methods = {
 	/**
@@ -19,9 +19,10 @@ const methods = {
 	 */
 	async file(resource, operation){
 		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.rc, resource.name);
-		operation.data = resource.root.parent.system.file.getFile(path, operation.file);
+		operation.data = await resource.root.parent.system.file.getFile(path, operation.file);
 	},
 	async in(resource, operation){
+		resource.in = resource.inData;
 	},
 	async md(resource, operation){ /* eslint-disable-line require-await */// Preserving async throught directives
 		var markdown = new MarkdownIt();
@@ -38,15 +39,21 @@ const methods = {
 		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.rc, resource.name);
 		operation.data = await resource.root.parent.app.njk(path, operation.njk, operation.hasOwnProperty("_with") ? operation._with : null);
 	},
+	async yml(resource, operation){
+		operation.data = await resource.root.parent.app.yml(operation._with);
+	},
 	async raw(resource, operation){ /* eslint-disable-line require-await */// Preserving async throught directives
 		operation.data = operation.raw;
 	},
 	async with(resource, operation){
-		var resourceContext = new ResourceContext(resource, resource.name);
+		var resourceContext = new ResourceContext(resource, resource.name, resource.in);
 		resourceContext.data = operation.with;
 		operation._with = await resourceContext.process();
 	},
-	out(resource, operation){
+	async as(resource, operation){
+		operation._as = resource.in;
+	},
+	async out(resource, operation){
 		return new Promise(function(resolve){
 			Promise.all(resource.data.filter(function(operation){
 				return operation.hasOwnProperty("data");
@@ -65,6 +72,12 @@ const methods = {
 					resource.out = JSON.parse(data.join(""));
 					break;
 
+					case "property":
+					resource.out = data.map(function(result){
+						return JSON.stringify(result.hasOwnProperty(operation._as) ? result[operation._as] : "");
+					}).join("");
+					break;
+
 					default:
 					throw "error 4";
 				}
@@ -75,7 +88,7 @@ const methods = {
 }
 
 class ResourceContext extends system.AtomicLock{
-	constructor(appOrParent, name){
+	constructor(appOrParent, name, inData){
 		// Call superclass constructor
 		super();
 
@@ -89,6 +102,7 @@ class ResourceContext extends system.AtomicLock{
 			this.parent = appOrParent;
 			this.data = JSON.parse(JSON.stringify(appOrParent.app.rc[name].main));
 		}
+		this.inData = inData;
 		this.name = name;
 		this.directives = {
 			in: [],
@@ -129,17 +143,17 @@ class ResourceContext extends system.AtomicLock{
 			} // <== for directive in operation
 		})
 
-		// Populate for default in: raw
-		// NOTE: Order of in then out is important, as referencing len-1 in async function for "out" will be evaluated during an actual call
+		// Populate for default in: raw	
 		if(this.directives.in.length == 0){
 			this.data.unshift({in: "raw"});
-			this.directives.in.push(() => methods.in(this, this.data[0]))
+			this.directives.in.push(() => methods.in(this, this.data[0]));
 		}
 
 		// Populate for default out: raw
+		// NOTE: Order of in then out is important, as referencing "len - 1" in async function for "out" will be evaluated during an actual call; That is why we are using "this.data.length", instead of what is returned by push, so that it does not matter what gets executed first - "in" or "out".
 		if(this.directives.out.length == 0){
-			let len = this.data.push({out: "raw"});
-			this.directives.out.push(() => methods.out(this, this.data[len - 1]))
+			this.data.push({out: "raw"});
+			this.directives.out.push(() => methods.out(this, this.data[this.data.length - 1]));
 		}
 
 		// Call directives

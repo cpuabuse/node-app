@@ -37,8 +37,8 @@ class App extends system.System{
 		);
 	}
 
-	getResource(resourceName){
-		var resourceContext = new resource.ResourceContext(this, resourceName);
+	getResource(resourceName, inData){
+		var resourceContext = new resource.ResourceContext(this, resourceName, inData);
 		return resourceContext.process();
 	}
 }

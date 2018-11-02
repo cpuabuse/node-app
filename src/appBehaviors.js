@@ -1,7 +1,7 @@
 "use strict";
 /** @event module:app.App~app_load */
-const resource = require("./resource.js");
 const nunjucks = require("nunjucks");
+const yaml = require("js-yaml");
 
 var behaviors = [
 	// Initialize resources
@@ -24,7 +24,10 @@ var behaviors = [
 						}
 					});
 				})
-			}
+			},
+			yml: string => new Promise(function(resolve){
+				resolve(yaml.load(string));
+			})
 		};
 
 		// Anonymous async arrow function expression
