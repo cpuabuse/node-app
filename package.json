@@ -1,10 +1,10 @@
 {
   "name": "cpuabuse-app",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "App module",
   "main": "src/app.js",
   "dependencies": {
-    "cpuabuse-system": "^0.0.2",
+    "cpuabuse-system": "^0.2.0",
     "markdown-it": "^8.4.2",
     "node-sass": "^4.9.4",
     "nunjucks": "^3.1.3"
