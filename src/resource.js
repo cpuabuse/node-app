@@ -6,7 +6,7 @@ const system = require("cpuabuse-system");
 const sass = require("node-sass");
 const MarkdownIt = require("markdown-it");
 const directives = {
-	primary: ["file", "scss", "md", "njk", "raw", "yml"],
+	primary: ["file", "scss", "md", "njk", "raw", "yml", "custom"],
 	secondary: ["with", "as"],
 	in: ["in"],
 	out: ["out"],
@@ -17,6 +17,12 @@ const methods = {
 	 * Primary operation
 	 * @param {*} operation 
 	 */
+	async custom(resource, operation){
+		let relativePath = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.rc, resource.name);
+		let absolutePath = await resource.root.parent.system.file.join(resource.root.parent.system.rootDir, relativePath);
+		let filePath = await resource.root.parent.system.file.join(absolutePath, operation.custom);
+		operation.data = await require(filePath)(resource, operation); /* eslint-disable-line global-require */// In-line require suits the needs and logic
+	},
 	async file(resource, operation){
 		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.rc, resource.name);
 		operation.data = await resource.root.parent.system.file.getFile(path, operation.file);

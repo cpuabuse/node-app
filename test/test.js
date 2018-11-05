@@ -7,5 +7,5 @@ var example;
 new Promise(function(resolve){
 	example = new app.App("latin_classes", path.resolve(__dirname, "data/latin_classes"), () => resolve());
 }).then(function(){
-	example.getResource("words", "2").then(data => console.log(data));
+	example.getResource("db", "2").then(data => console.log(data));
 });
