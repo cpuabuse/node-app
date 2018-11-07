@@ -74,6 +74,10 @@ const methods = {
 					resource.out = data.join("");
 					break;
 
+					case "first_serve":
+					resource.out = data[0];
+					break;
+
 					case "object":
 					resource.out = JSON.parse(data.join(""));
 					break;
