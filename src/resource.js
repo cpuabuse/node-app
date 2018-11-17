@@ -13,10 +13,6 @@ const directives = {
 	aux: ["data","primaryCounter", "_with", "_as"] // Properties added to the object over which iteration is occurring may either be visited or omitted from iteration. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
 };
 const methods = {
-	/**
-	 * Primary operation
-	 * @param {*} operation 
-	 */
 	async custom(resource, operation){
 		let relativePath = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.rc, resource.name);
 		let absolutePath = await resource.root.parent.system.file.join(resource.root.parent.system.rootDir, relativePath);
