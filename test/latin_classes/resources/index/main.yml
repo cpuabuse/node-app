@@ -1,3 +1,5 @@
 - in: raw
-- file: index.html
+- file:
+    path: ./
+    name: index.html
 - out: raw

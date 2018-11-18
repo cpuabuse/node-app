@@ -1,4 +1,4 @@
-- file: index.html
+- file: recipe.html
 - md:
   with:
     - file: list.md

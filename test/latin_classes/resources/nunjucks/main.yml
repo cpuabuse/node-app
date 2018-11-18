@@ -2,6 +2,6 @@
 - njk: words.njk
   with:
   - in:
-  - raw: '{"world":"world"}'
+  - raw: '{"qui":"Mundi"}'
   - out: object
 - out: raw

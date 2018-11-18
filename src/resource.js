@@ -20,8 +20,8 @@ const methods = {
 		operation.data = await require(filePath)(resource, operation); /* eslint-disable-line global-require */// In-line require suits the needs and logic
 	},
 	async file(resource, operation){
-		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.rc, resource.name);
-		operation.data = await resource.root.parent.system.file.getFile(path, operation.file);
+		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.file, operation.file.path);
+		operation.data = await resource.root.parent.system.file.getFile(path, operation.file.name);
 	},
 	async in(resource, operation){
 		resource.in = resource.inData;

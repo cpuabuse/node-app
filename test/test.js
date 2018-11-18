@@ -13,6 +13,8 @@
 
 const app = require("../src/app.js");
 const path = require("path");
+const assert = require("assert");
+const expected = require("./expected.js");
 
 /**
  * Tests for the App class.
@@ -21,24 +23,87 @@ const path = require("path");
  */
 describe("App", function() {
 	var apps = [
+		// Latin classes
 		{
 			name: "latin_classes",
 			path: "test/latin_classes",
 			requests: [
-				"1"
+				// Index - testing file directive
+				{
+					name: "index",
+					value: expected.index,
+					argument: null
+				},
+				// Markdown - testing markdown directive
+				{
+					name: "markdown",
+					value: expected.markdown,
+					argument: null
+				},
+				// Secret recipe - testing with directive
+				{
+					name: "secret_recipe",
+					value: expected.secretRecipe,
+					argument: null
+				},
+				// Nunjucks - testing nunjucks directive
+				{
+					name: "nunjucks",
+					value: expected.nunjucks,
+					argument: null
+				},
+				// Nunjucks - testing nunjucks directive
+				{
+					name: "yaml",
+					value: expected.yaml,
+					argument: "salve"
+				},
+				// Words - testing "out: property" directive
+				{
+					name: "words",
+					value: expected.words["1"],
+					argument: "1"
+				},
+				// CSS - testing scss directive
+				{
+					name: "css",
+					value: expected.css,
+					argument: null
+				},
+				// DB - testing custom directive
+				{
+					name: "db",
+					value: expected.words["1"],
+					argument: "1"
+				}
 			]
 		}
 	];
+	// Process App class
 	apps.forEach(function(element){
 		var appTest;
 		var appPromise = new Promise(function(resolve){
 			appTest = new app.App("latin_classes", path.resolve(__dirname, "latin_classes"), () => resolve());
 		});
+		// Process resources if requests present
 		if(element.hasOwnProperty("requests")){
 			if(element.requests.length > 0){
-				element.requests.forEach(function(request){
-					appPromise.then(function(){
-						appTest.getResource("db", "2").then(data => console.log(data));
+				describe("#resource", function(){
+					element.requests.forEach(function(request){
+						// Process resource
+						describe(request.name, function(){
+							it("should produce expected output", function(done){
+								appPromise.then(function(){
+									appTest.getResource(request.name, request.argument).then(function(data){
+										// Assert that output data is equal to expected value
+										assert.equal(data, request.value);
+										done();
+									}).catch(function(error){
+										done(error);
+									});
+								});
+							});
+						});
 					});
 				});
 			}
