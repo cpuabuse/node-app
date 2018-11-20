@@ -2,6 +2,8 @@
 - yml:
   with:
   - in: raw
-  - file: hello.yml
+  - file:
+      path: ./
+      name: hello.yml
 - out: property
   as: in

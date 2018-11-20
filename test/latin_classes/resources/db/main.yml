@@ -1,3 +1,5 @@
 - in: raw
-- custom: db.js
+- custom:
+    path: ./
+    name: db.js
 - out: raw

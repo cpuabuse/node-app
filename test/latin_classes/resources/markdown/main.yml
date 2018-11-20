@@ -2,6 +2,8 @@
 - md:
   with:
   - in: raw
-  - file: latin.md
+  - file: 
+      path: ./
+      name: latin.md
   - out: raw
 - out: raw

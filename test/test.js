@@ -40,7 +40,7 @@ describe("App", function() {
 					value: expected.markdown,
 					argument: null
 				},
-				// Secret recipe - testing with directive
+				// Secret recipe - testing multiple directives sequence
 				{
 					name: "secret_recipe",
 					value: expected.secretRecipe,
@@ -52,7 +52,7 @@ describe("App", function() {
 					value: expected.nunjucks,
 					argument: null
 				},
-				// Nunjucks - testing nunjucks directive
+				// Yaml - testing yaml directive
 				{
 					name: "yaml",
 					value: expected.yaml,

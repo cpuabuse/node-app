@@ -5,9 +5,9 @@ const sqlite3 = require("sqlite3").verbose();
 /**
  *
  */
-async function main(resource){
+async function main(resource, operation){
 	var app = resource.root.parent;
-	var workDir = await app.system.file.join(app.settings.folders.rc, resource.name);
+	var workDir = await app.system.file.join(app.settings.folders.file, operation.custom.path);
 	var absolutePath = await app.system.file.join(app.system.rootDir, workDir);
 	var dbPath = await app.system.file.join(absolutePath, "db.db");
 
@@ -28,9 +28,6 @@ async function main(resource){
 		if (err) {
 			throw err;
 		}
-		rows.forEach(row => {
-			console.log(row.q);
-		});
 	});
 
 	// Close the database

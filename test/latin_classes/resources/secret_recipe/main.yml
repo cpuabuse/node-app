@@ -1,5 +1,11 @@
-- file: recipe.html
+- file:
+    path: ./
+    name: recipe.html
 - md:
   with:
-    - file: list.md
-- file: comment.html
+  - file:
+      path: ./
+      name: list.md
+- file:
+    path: ./
+    name: comment.html

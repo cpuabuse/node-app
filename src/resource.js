@@ -1,4 +1,16 @@
 // resource.js
+/*
+	On the language:
+
+	There are four types of directives:
+
+	1. Primary
+	2. Secondary
+	3. Input
+	4. Output
+
+	Primary directives can either have static arguments, or arguments provided by secondary directives.
+*/
 /* Contains class helper for resource operation processing */
 /* eslint no-underscore-dangle: ["error", { "allow": ["_with", "_as"] }] */// Allowing for the ouput of the directives
 "use strict";
@@ -14,9 +26,9 @@ const directives = {
 };
 const methods = {
 	async custom(resource, operation){
-		let relativePath = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.rc, resource.name);
+		let relativePath = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.file, operation.custom.path);
 		let absolutePath = await resource.root.parent.system.file.join(resource.root.parent.system.rootDir, relativePath);
-		let filePath = await resource.root.parent.system.file.join(absolutePath, operation.custom);
+		let filePath = await resource.root.parent.system.file.join(absolutePath, operation.custom.name);
 		operation.data = await require(filePath)(resource, operation); /* eslint-disable-line global-require */// In-line require suits the needs and logic
 	},
 	async file(resource, operation){
@@ -38,8 +50,8 @@ const methods = {
 		operation.data = text.css.toString("utf-8");
 	},
 	async njk(resource, operation){
-		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.rc, resource.name);
-		operation.data = await resource.root.parent.app.njk(path, operation.njk, operation.hasOwnProperty("_with") ? operation._with : null);
+		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.file, operation.njk.path);
+		operation.data = await resource.root.parent.app.njk(path, operation.njk.name, operation.hasOwnProperty("_with") ? operation._with : null);
 	},
 	async yml(resource, operation){
 		operation.data = await resource.root.parent.app.yml(operation._with);
@@ -80,7 +92,9 @@ const methods = {
 
 					case "property":
 					resource.out = data.map(function(result){
-						return JSON.stringify(result.hasOwnProperty(operation._as) ? result[operation._as] : "");
+						/* Every object has a toString() method that is automatically called when the object is to be represented as a text value...
+						https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString#Description */
+						return (result.hasOwnProperty(operation._as) ? result[operation._as] : "").toString();
 					}).join("");
 					break;
 

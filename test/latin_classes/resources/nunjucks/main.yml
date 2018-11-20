@@ -1,5 +1,7 @@
 - in: raw
-- njk: words.njk
+- njk:
+    path: ./
+    name: words.njk
   with:
   - in:
   - raw: '{"qui":"Mundi"}'

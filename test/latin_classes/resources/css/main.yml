@@ -2,6 +2,8 @@
 - scss:
   with:
   - in: raw
-  - file: style.scss
+  - file:
+      path: ./
+      name: style.scss
   - out: raw
 - out: raw

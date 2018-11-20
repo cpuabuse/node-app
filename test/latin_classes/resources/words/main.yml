@@ -1,6 +1,8 @@
 - in: raw
 - yml:
   with:
-  - file: words.yml
+  - file:
+      path: ./
+      name: words.yml
 - out: property
   as: in
