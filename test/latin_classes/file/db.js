@@ -16,25 +16,22 @@ async function main(resource, operation){
 		if (err) {
 			console.error(err.message);
 		}
-		console.log("Connected to database.");
 	});
 
-	// Analyze request
+	return new Promise(function(resolve, reject){
+		// Query
+		let sql = "SELECT * FROM words";
 
-	// Query
-	let sql = "SELECT * FROM words";
-
-	db.all(sql, [], (err, rows) => {
-		if (err) {
-			throw err;
-		}
+		db.all(sql, [], (err, rows) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(rows);
+			}
+			// Close the database
+			db.close();
+		});
 	});
-
-	// Close the database
-	db.close();
-
-	// Return
-	return 0;
 }
 
 module.exports = main;

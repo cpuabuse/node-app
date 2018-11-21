@@ -37,20 +37,15 @@ var behaviors = [
 			let results = new Array();
 
 			// Retrieve absolute paths
-			let rcFolders = await that.system.file.list(rcFolder, that.system.file.filter.isDir);
+			let rcFiles = await that.system.file.list(rcFolder, that.system.file.filter.isFile);
 
 			// Populate the promises
-			rcFolders.forEach(folder => {
+			rcFiles.forEach(rcFile => {
 				results.push(new Promise(function(resolve){
-					let item = that.system.file.toRelative(rcFolder, folder);
-					that.system.file.getFile(folder, "main.yml").then(function(file){
-						item.then(function(item){
-							that.app.rc[item] = {
-								main: that.constructor.yamlToObject(file)
-							};
-							resolve();
-						})
-					})
+					that.system.file.getYaml(rcFolder, rcFile).then(function(result){
+						that.app.rc[rcFile.split(".yml")[0]] = result;
+						resolve();
+					});
 				}));
 			});
 			await Promise.all(results);

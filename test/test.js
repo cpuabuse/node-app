@@ -73,8 +73,8 @@ describe("App", function() {
 				// DB - testing custom directive
 				{
 					name: "db",
-					value: expected.words["1"],
-					argument: "1"
+					value: expected.db,
+					argument: null
 				}
 			]
 		}

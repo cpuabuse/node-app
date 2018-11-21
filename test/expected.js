@@ -72,6 +72,25 @@ const css =
   color: #333; }
 `;
 
+const db = [
+	{
+		q: "luna",
+		a: "moon"
+	},
+	{
+		q: "meus",
+		a: "my"
+	},
+	{
+		q: "ordo",
+		a: "rank"
+	},
+	{
+		q: "perculsus",
+		a: "shock"
+	}
+];
+
 module.exports = {
 	index,
 	markdown,
@@ -79,5 +98,6 @@ module.exports = {
 	nunjucks,
 	yaml,
 	words,
-	css
+	css,
+	db
 }

@@ -120,7 +120,7 @@ class ResourceContext extends system.AtomicLock{
 			this.depth = 0;
 			this.root = this;
 			this.parent = appOrParent;
-			this.data = JSON.parse(JSON.stringify(appOrParent.app.rc[name].main));
+			this.data = JSON.parse(JSON.stringify(appOrParent.app.rc[name]));
 		}
 		this.inData = inData;
 		this.name = name;
