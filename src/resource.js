@@ -17,52 +17,94 @@
 const system = require("cpuabuse-system");
 const sass = require("node-sass");
 const MarkdownIt = require("markdown-it");
+const path = require("path");
 const directives = {
 	primary: ["file", "scss", "md", "njk", "raw", "yml", "custom"],
 	secondary: ["with", "as"],
 	in: ["in"],
 	out: ["out"],
-	aux: ["data","primaryCounter", "_with", "_as"] // Properties added to the object over which iteration is occurring may either be visited or omitted from iteration. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
+	aux: ["data","primaryCounter", "_with", "_as", "_out"] // Properties added to the object over which iteration is occurring may either be visited or omitted from iteration. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
 };
 const methods = {
 	async custom(resource, operation){
 		let relativePath = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.file, operation.custom.path);
 		let absolutePath = await resource.root.parent.system.file.join(resource.root.parent.system.rootDir, relativePath);
 		let filePath = await resource.root.parent.system.file.join(absolutePath, operation.custom.name);
-		operation.data = await require(filePath)(resource, operation); /* eslint-disable-line global-require */// In-line require suits the needs and logic
+		operation._out = {
+			data: await require(filePath)(resource, operation), /* eslint-disable-line global-require */// In-line require suits the needs and logic
+			pType: "??",
+			lType: "??"
+		}
 	},
 	async file(resource, operation){
-		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.file, operation.file.path);
-		operation.data = await resource.root.parent.system.file.getFile(path, operation.file.name);
+		let filePath = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.file, operation.file.path);
+		let lType;
+		switch(path.parse(operation.file.name).ext){
+			case ".yml":
+			case ".md":
+			case ".html":
+			case ".scss":
+			lType = "string";
+			break;
+
+			default:
+			// Throw error
+			lType = "binary"
+		}
+		operation._out = {
+			data: await resource.root.parent.system.file.getFile(filePath, operation.file.name),
+			pType: "buffer",
+			lType
+		}
 	},
 	async in(resource, operation){
 		resource.in = resource.inData;
 	},
 	async md(resource, operation){ /* eslint-disable-line require-await */// Preserving async throught directives
 		var markdown = new MarkdownIt();
-		operation.data = markdown.render(operation._with);
+		operation._out = {
+			data: markdown.render(operation._with),
+			pType: "string",
+			lType: "text/html"
+		}
 	},
 	async scss(resource, operation){ /* eslint-disable-line require-await */// Preserving async throught directives
 		let text = sass.renderSync({
 			data: operation._with
 		});
 
-		operation.data = text.css.toString("utf-8");
+		operation._out = {
+			data: text.css.toString("utf-8"),
+			pType: "string",
+			lType: "text/css"
+		};
 	},
 	async njk(resource, operation){
 		let path = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.file, operation.njk.path);
-		operation.data = await resource.root.parent.app.njk(path, operation.njk.name, operation.hasOwnProperty("_with") ? operation._with : null);
+		operation._out = {
+			data: await resource.root.parent.app.njk(path, operation.njk.name, operation.hasOwnProperty("_with") ? operation._with : null),
+			pType: "string",
+			lType: "string??"
+		};
 	},
 	async yml(resource, operation){
-		operation.data = await resource.root.parent.app.yml(operation._with);
+		operation._out = {
+			data: await resource.root.parent.app.yml(operation._with),
+			pType: "string",
+			lType: "string"
+		}
 	},
 	async raw(resource, operation){ /* eslint-disable-line require-await */// Preserving async throught directives
-		operation.data = operation.raw;
+		operation._out = {
+			data: operation.raw,
+			pType: "??",
+			lType: "??"
+		};
 	},
 	async with(resource, operation){
 		var resourceContext = new ResourceContext(resource, resource.name, resource.in);
 		resourceContext.data = operation.with;
-		operation._with = await resourceContext.process();
+		operation._with = (await resourceContext.process()).data;
 	},
 	async as(resource, operation){
 		operation._as = resource.in;
@@ -70,32 +112,42 @@ const methods = {
 	async out(resource, operation){
 		return new Promise(function(resolve){
 			Promise.all(resource.data.filter(function(operation){
-				return operation.hasOwnProperty("data");
+				return operation.hasOwnProperty("_out");
 			}).map(function(operation){
-				return operation.data;
+				return operation._out.data;
 			})).then(function(data){
 				switch(operation.out){
 					case "raw":
 					case "string":
 					case "":
 					case null:
-					resource.out = data.join("");
+					resource.out = {
+						data: data.join(""),
+						pType: "string",
+						lType: "string"
+					};
 					break;
 
 					case "first_serve":
-					resource.out = data[0];
+					resource.out = {
+						data: data[0]
+					};
 					break;
 
 					case "object":
-					resource.out = JSON.parse(data.join(""));
+					resource.out = {
+						data: JSON.parse(data.join(""))
+					}
 					break;
 
 					case "property":
-					resource.out = data.map(function(result){
-						/* Every object has a toString() method that is automatically called when the object is to be represented as a text value...
-						https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString#Description */
-						return (result.hasOwnProperty(operation._as) ? result[operation._as] : "").toString();
-					}).join("");
+					resource.out = {
+						data: data.map(function(result){
+							/* Every object has a toString() method that is automatically called when the object is to be represented as a text value...
+							https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString#Description */
+							return (result.hasOwnProperty(operation._as) ? result[operation._as] : "").toString();
+						}).join("")
+					};
 					break;
 
 					default:

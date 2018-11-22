@@ -2,6 +2,7 @@
 /** @event module:app.App~app_load */
 const nunjucks = require("nunjucks");
 const yaml = require("js-yaml");
+const path = require("path");
 
 var behaviors = [
 	// Initialize resources
@@ -43,7 +44,7 @@ var behaviors = [
 			rcFiles.forEach(rcFile => {
 				results.push(new Promise(function(resolve){
 					that.system.file.getYaml(rcFolder, rcFile).then(function(result){
-						that.app.rc[rcFile.split(".yml")[0]] = result;
+						that.app.rc[path.parse(rcFile).name] = result;
 						resolve();
 					});
 				}));

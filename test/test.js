@@ -94,9 +94,9 @@ describe("App", function() {
 						describe(request.name, function(){
 							it("should produce expected output", function(done){
 								appPromise.then(function(){
-									appTest.getResource(request.name, request.argument).then(function(data){
+									appTest.getResource(request.name, request.argument).then(function(out){
 										// Assert that output data is equal to expected value
-										assert.equal(data, request.value);
+										assert.equal(out.data, request.value);
 										done();
 									}).catch(function(error){
 										done(error);
