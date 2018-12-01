@@ -3,3 +3,4 @@ base_url: "latin-school.example.com/classes"
 folders:
   rc: "resources"
   file: "file"
+  db: "db"

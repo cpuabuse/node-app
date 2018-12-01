@@ -3,6 +3,7 @@
 const nunjucks = require("nunjucks");
 const yaml = require("js-yaml");
 const path = require("path");
+const sqlite3 = require("sqlite3").verbose();
 
 var behaviors = [
 	// Initialize resources
@@ -35,7 +36,9 @@ var behaviors = [
 		(async () => {
 			// Local variables
 			let rcFolder = that.settings.folders.rc;
+			let dbFolder = that.settings.folders.db;
 			let results = new Array();
+			let dbResults = new Array();
 
 			// Retrieve absolute paths
 			let rcFiles = await that.system.file.list(rcFolder, that.system.file.filter.isFile);
@@ -49,7 +52,27 @@ var behaviors = [
 					});
 				}));
 			});
+
+			// Initialize database connections
+			let dbFiles = await that.system.file.list(dbFolder, that.system.file.filter.isFile);
+
+			// Populate the promises
+			dbFiles.forEach(function(dbFile){
+				dbResults.push(new Promise(function(resolve, reject){
+					let dbPath = that.system.fole.toAbsolute(dbFolder, dbFile);
+					// Open database connection
+					that.app.db[path.parse(dbFile).name] = new sqlite3.Database(dbPath, err => {
+						if (err) {
+							reject(err);
+						} else {
+							resolve();
+						}
+					});
+				}));
+			});
+
 			await Promise.all(results);
+			await Promise.all(dbResults);
 			return true;
 		})().then(() => that.fire("app_load")); // <== (async () => {...})();;
 	}},
