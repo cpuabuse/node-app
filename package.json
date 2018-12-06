@@ -4,7 +4,7 @@
   "description": "App module",
   "main": "src/app.js",
   "dependencies": {
-    "cpuabuse-system": "^0.2.2",
+    "cpuabuse-system": "^0.2.3",
     "markdown-it": "^8.4.2",
     "node-sass": "^4.10.0",
     "nunjucks": "^3.1.4",

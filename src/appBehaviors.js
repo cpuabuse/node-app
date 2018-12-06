@@ -11,6 +11,7 @@ var behaviors = [
 		// Declare structures
 		that.app = {
 			rc: {},
+			db: {},
 			// FIXME: Add if njk exists error
 			njk: async(dir, file, args) => {
 				let path = await that.system.file.join(that.system.rootDir, dir);
@@ -59,20 +60,23 @@ var behaviors = [
 			// Populate the promises
 			dbFiles.forEach(function(dbFile){
 				dbResults.push(new Promise(function(resolve, reject){
-					let dbPath = that.system.fole.toAbsolute(dbFolder, dbFile);
-					// Open database connection
-					that.app.db[path.parse(dbFile).name] = new sqlite3.Database(dbPath, err => {
-						if (err) {
-							reject(err);
-						} else {
-							resolve();
-						}
+					that.system.file.toAbsolute(dbFolder, dbFile).then(function(dbPath){
+						// Open database connection
+						that.app.db[path.parse(dbFile).name] = new sqlite3.Database(dbPath, err => {
+							if (err) {
+								reject(err);
+							} else {
+								resolve();
+							}
+						});
 					});
 				}));
 			});
 
 			await Promise.all(results);
-			await Promise.all(dbResults);
+			await Promise.all(dbResults).catch(function(err){
+				console.log(err);
+			});
 			return true;
 		})().then(() => that.fire("app_load")); // <== (async () => {...})();;
 	}},
