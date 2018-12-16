@@ -6,4 +6,4 @@
       path: ./
       name: hello.yml
 - out: property
-  as: in
+  from: in

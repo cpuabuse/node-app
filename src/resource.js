@@ -12,7 +12,7 @@
 	Primary directives can either have static arguments, or arguments provided by secondary directives.
 */
 /* Contains class helper for resource operation processing */
-/* eslint no-underscore-dangle: ["error", { "allow": ["_with", "_as"] }] */// Allowing for the ouput of the directives
+/* eslint no-underscore-dangle: ["error", { "allow": ["_with", "_as", "_out"] }] */// Allowing for the ouput of the directives
 "use strict";
 const system = require("cpuabuse-system");
 const sass = require("node-sass");
@@ -20,10 +20,10 @@ const MarkdownIt = require("markdown-it");
 const path = require("path");
 const directives = {
 	primary: ["file", "scss", "md", "njk", "raw", "yml", "custom"],
-	secondary: ["with", "as"],
+	secondary: ["with", "from"],
 	in: ["in"],
 	out: ["out"],
-	aux: ["data","primaryCounter", "_with", "_as", "_out"] // Properties added to the object over which iteration is occurring may either be visited or omitted from iteration. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
+	aux: ["data","primaryCounter", "_with", "_out"] // Properties added to the object over which iteration is occurring may either be visited or omitted from iteration. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
 };
 const methods = {
 	async custom(resource, operation){
@@ -106,8 +106,17 @@ const methods = {
 		resourceContext.data = operation.with;
 		operation._with = (await resourceContext.process()).data;
 	},
-	async as(resource, operation){
-		operation._as = resource.in;
+	/**
+	 * "from" directive is a practical shortcut for semantic "with: - from:".
+	 */
+	async from(resource, operation){
+		switch (operation.from){
+			case "in":
+			operation._with = resource.in;
+			break;
+
+			default:
+		}
 	},
 	async out(resource, operation){
 		return new Promise(function(resolve){
@@ -145,7 +154,7 @@ const methods = {
 						data: data.map(function(result){
 							/* Every object has a toString() method that is automatically called when the object is to be represented as a text value...
 							https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString#Description */
-							return (result.hasOwnProperty(operation._as) ? result[operation._as] : "").toString();
+							return (result.hasOwnProperty(operation._with) ? result[operation._with] : "").toString();
 						}).join("")
 					};
 					break;

@@ -5,4 +5,4 @@
       path: ./
       name: words.yml
 - out: property
-  as: in
+  from: in
