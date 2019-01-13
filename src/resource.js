@@ -42,11 +42,26 @@ const methods = {
 		switch(path.parse(operation.file.name).ext){
 			case ".yml":
 			case ".md":
-			case ".html":
+			case ".njk":
 			case ".scss":
-			lType = "string";
-			break;
-
+				lType = "text/plain";
+				break;
+			case ".json":
+				lType = "application/json";
+				break;
+			case ".js":
+				lType = "application/javascript";
+				break;
+			case ".html":
+				lType = "text/html";
+				break;
+			case ".jpg":
+			case ".jpeg":
+				lType = "image/jpg";
+				break;
+			case ".png":
+				lType = "image/png";
+				break;
 			default:
 			// Throw error
 			lType = "binary"
