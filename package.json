@@ -5,6 +5,7 @@
   "main": "src/app.js",
   "dependencies": {
     "cpuabuse-system": "^0.2.4",
+    "jimp": "^0.6.0",
     "markdown-it": "^8.4.2",
     "node-sass": "^4.11.0",
     "nunjucks": "^3.1.6",
