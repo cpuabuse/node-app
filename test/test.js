@@ -12,13 +12,24 @@
 /* global it:true */
 
 const app = require("../src/app.js");
+const image = require("../src/image.js");
 const path = require("path");
 const assert = require("assert");
 const expected = require("./expected.js");
 
+describe("image", function(){
+	it("should be same as pre-composed image", function(done){
+		let res = image.composeImage(["test/latin_classes/file/img/OpenGL_170px_June16.png", "test/latin_classes/file/img/Vulkan_170px_Dec16.png"]);
+		res.then(function(value){
+			assert.deepEqual(value, require("fs").readFileSync("test/latin_classes/file/img/opengl_vulkan.png"));
+			done();
+		})
+	}).timeout(20000);
+});
+
 /**
  * Tests for the App class.
- * @member Loader
+ * @member App
  * @memberof module:app~test
  */
 describe("App", function() {

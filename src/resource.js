@@ -133,52 +133,50 @@ const methods = {
 			default:
 		}
 	},
-	async out(resource, operation){
-		return new Promise(function(resolve){
-			Promise.all(resource.data.filter(function(operation){
-				return operation.hasOwnProperty("_out");
-			}).map(function(operation){
-				return operation._out.data;
-			})).then(function(data){
-				switch(operation.out){
-					case "raw":
-					case "string":
-					case "":
-					case null:
-					resource.out = {
-						data: data.join(""),
-						pType: "string",
-						lType: "string"
-					};
+	out(resource, operation){
+		return Promise.all(resource.data.filter(function(operation){
+			return operation.hasOwnProperty("_out");
+		}).map(function(operation){
+			return {
+				data: operation._out.data,
+				lType: operation._out.lType,
+				pType: operation._out.pType
+			};
+		})).then(function(rawData){
+			let data;
+			switch(operation.out){
+				case "raw": // Quite strict, set to raw only for default behavior
+					data = rawData.map(function(operation){
+						return operation.data;
+					});
 					break;
 
-					case "first_serve":
-					resource.out = {
-						data: data[0]
-					};
+				case "first_serve":
+					data = [rawData[0].data];
 					break;
 
-					case "object":
-					resource.out = {
-						data: JSON.parse(data.join(""))
-					}
+				case "object":
+					data = rawData.map(function(operation){
+						return JSON.parse(operation.data);
+					});
 					break;
 
-					case "property":
-					resource.out = {
-						data: data.map(function(result){
-							/* Every object has a toString() method that is automatically called when the object is to be represented as a text value...
-							https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString#Description */
-							return (result.hasOwnProperty(operation._with) ? result[operation._with] : "").toString();
-						}).join("")
-					};
+				case "property":
+					data = rawData.map(function(result){
+						/* Every object has a toString() method that is automatically called when the object is to be represented as a text value...
+						https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString#Description */
+						return (result.data.hasOwnProperty(operation._with) ? result.data[operation._with] : "").toString();
+					});
 					break;
 
-					default:
+				default:
 					throw "error 4";
-				}
-				resolve();
-			})
+			} // <== 	switch(operation.out)
+
+			// Determine a hint
+			resource.out = {
+				data: data.length > 1 ? data.join("") : operation.out === "object" ? data[0] : data[0].toString()
+			}
 		});
 	}
 }
@@ -239,7 +237,7 @@ class ResourceContext extends system.AtomicLock{
 			} // <== for directive in operation
 		})
 
-		// Populate for default in: raw	
+		// Populate for default in: raw
 		if(this.directives.in.length == 0){
 			this.data.unshift({in: "raw"});
 			this.directives.in.push(() => methods.in(this, this.data[0]));
