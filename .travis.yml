@@ -2,8 +2,23 @@ language: node_js
 node_js:
   - "11"
   - "10"
-after_script:
-  - |
-    # Coverage
-    npm run coverage
-    cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js
+jobs:
+  include:
+  - stage: npm next release
+    node_js: '11'
+    script: echo "Deploying to npm with next..."
+    deploy:
+      email: "cpuabuse@gmail.com"
+      provider: npm
+      api_key:
+        secure: 1gk2WMYh9U4vOTIdt0boXvdhJ8s9x+aKwyQo9OWHbV4DHh4nrPzeNv+/1k83C2ze501zQIJYFH3Mdn+0dkf1wvMDo1Wp2x7+S2ByNS4bfyRSrcK8RHs/860alx5+Z9T+oEJUHt81qehUNclztBz2X4F9Fmx7MAyQDKfalcPmKM8ezgRuGaZhl54citmXgGtbgIEt4uF9ABY9bMHtfiSqkNNkRuwv5dNWyUrZsX0RXAnt4E7/ZuqhoI/Esf8+2rj/0G+TJDG4Kdwck+w7oPmNuHhj+T2AK4df/ltW4BlJoh68LCizlBqf48TyFJ/Qf4TePPJQLXfG0huM3GusyNB2Aw7XBPtn7lQTM5k3qwbn9WFL9SRwwdwya27HCLaFNoZAMlaCMJdAlC/f0DwIVGhPZh1Rx59MScSsftceBo7dXTwB1jKQj23lWVJrF2Dsb16HlMEjgYccu4mopsy48FJK6ugJ+ZhKg+T+a5AEp+rxg5SFsTe2opg4NlsJks76wZLVvZYLXI77E6FEQXbj09EnhDeEzKRvBhX/v292P1w5rkiUDeKW2mfDCpp4mbeOIDWbixQ+qlX/sHNDEt8dw+uGklHWrqDDsAbtodfkPEQVIqJX7jUhWvJE/EsfATUMLY25aL3qR560DeZ3ksrz+xPbqZRJcFeFKaBdHWJN9lfOBl8=
+      on:
+        branch: dev
+      tag: next
+  - stage: coverage
+    node_js: '11'
+    script:
+    - |
+      # Coverage
+      npm run coverage
+      cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js
