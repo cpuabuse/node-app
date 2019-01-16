@@ -24,7 +24,7 @@ describe("image", function(){
 			assert.deepEqual(value, require("fs").readFileSync("test/latin_classes/file/img/opengl_vulkan.png"));
 			done();
 		})
-	}).timeout(20000);
+	});
 });
 
 /**
@@ -86,7 +86,13 @@ describe("App", function() {
 					name: "db",
 					value: expected.db,
 					argument: null
-				}
+				},
+				// Image - testing image composing
+				{
+					name: "image",
+					value: require("fs").readFileSync("test/latin_classes/file/img/opengl_vulkan.png"),
+					argument: null
+				},
 			]
 		}
 	];

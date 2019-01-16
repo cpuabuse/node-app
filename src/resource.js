@@ -18,6 +18,7 @@ const system = require("cpuabuse-system");
 const sass = require("node-sass");
 const MarkdownIt = require("markdown-it");
 const path = require("path");
+const image = require("./image.js");
 const directives = {
 	primary: ["file", "scss", "md", "njk", "raw", "yml", "custom"],
 	secondary: ["with", "from"],
@@ -142,22 +143,24 @@ const methods = {
 				lType: operation._out.lType,
 				pType: operation._out.pType
 			};
-		})).then(function(rawData){
+		})).then(async function(rawData){
 			let data;
 			switch(operation.out){
 				case "raw": // Quite strict, set to raw only for default behavior
-					data = rawData.map(function(operation){
-						return operation.data;
-					});
+					data = rawData;
 					break;
 
 				case "first_serve":
-					data = [rawData[0].data];
+					data = [rawData[0]];
 					break;
 
 				case "object":
 					data = rawData.map(function(operation){
-						return JSON.parse(operation.data);
+						return {
+							data: JSON.parse(operation.data),
+							lType: "application/json",
+							pType: "Object"
+						}
 					});
 					break;
 
@@ -165,7 +168,11 @@ const methods = {
 					data = rawData.map(function(result){
 						/* Every object has a toString() method that is automatically called when the object is to be represented as a text value...
 						https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString#Description */
-						return (result.data.hasOwnProperty(operation._with) ? result.data[operation._with] : "").toString();
+						return {
+							data: (result.data.hasOwnProperty(operation._with) ? result.data[operation._with] : "").toString(),
+							lType: result.lType,
+							pType: result.pType
+						}
 					});
 					break;
 
@@ -174,8 +181,22 @@ const methods = {
 			} // <== 	switch(operation.out)
 
 			// Determine a hint
-			resource.out = {
-				data: data.length > 1 ? data.join("") : operation.out === "object" ? data[0] : data[0].toString()
+			let hint = data[0].lType;
+
+			// Generate the result
+			data = data.map(function(operation){
+				return operation.data;
+			});
+
+			// Populate the result
+			if(hint === "image/png" || hint === "image/jpg"){
+				resource.out = {
+					data: await image.composeImage(data)
+				}
+			} else {
+				resource.out = {
+					data: data.length > 1 ? data.join("") : operation.out === "object" ? data[0] : data[0].toString()
+				}
 			}
 		});
 	}
