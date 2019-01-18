@@ -100,7 +100,7 @@ describe("App", function() {
 	apps.forEach(function(element){
 		var appTest;
 		var appPromise = new Promise(function(resolve){
-			appTest = new app.App("latin_classes", path.resolve(__dirname, "latin_classes"), () => resolve());
+			appTest = new app.App("latin_classes", path.resolve(__dirname, "latin_classes"), "off", () => resolve());
 		});
 		// Process resources if requests present
 		if(element.hasOwnProperty("requests")){

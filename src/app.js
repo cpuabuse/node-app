@@ -17,9 +17,10 @@ const resource = require("./resource.js");
  * @extends module:system.System
  * @param {string} id Identifier of the app
  * @param {string} rootDir App root directory
+ * @param {string} logging Type of logging used
  */
 class App extends system.System{
-	constructor (id, rootDir, appLoadCallback){
+	constructor (id, rootDir, logging, appLoadCallback){
 
 		// Call parents constructor with the default parameters for the App
 		let allBehaviors = behaviors;
@@ -31,7 +32,7 @@ class App extends system.System{
 				rootDir,
 				relativeInitDir: app_initDir,
 				initFilename: app_initFilename,
-				notMute: true
+				logging
 			},
 			allBehaviors
 		);
