@@ -4,9 +4,10 @@ node_js:
   - "10"
 jobs:
   include:
-  - stage: npm next release
+  - stage: Post test
+    name: npm next release
     node_js: '11'
-    script: echo "Deploying to npm with next..."
+    script: echo "Deploying..."
     deploy:
       email: "cpuabuse@gmail.com"
       provider: npm
@@ -15,7 +16,7 @@ jobs:
       on:
         branch: dev
       tag: next
-  - stage: coverage
+  - name: coverage
     node_js: '11'
     script:
     - |
