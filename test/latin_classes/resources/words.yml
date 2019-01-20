@@ -3,6 +3,6 @@
   with:
   - file:
       path: ./
-      name: words.yml
+      name: latin_words.yml
 - out: property
   from: in

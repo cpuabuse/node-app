@@ -44,40 +44,40 @@ describe("App", function() {
 					name: "index",
 					value: expected.index,
 					argument: null,
-					mime: "html"
+					mime: "text/html"
 				},
 				// Markdown - testing markdown directive
 				{
 					name: "markdown",
 					value: expected.markdown,
 					argument: null,
-					mime: "html"
+					mime: "text/html"
 				},
 				// Secret recipe - testing multiple directives sequence
 				{
 					name: "secret_recipe",
 					value: expected.secretRecipe,
 					argument: null,
-					mime: "html"
+					mime: "text/html"
 				},
 				// Nunjucks - testing nunjucks directive
 				{
 					name: "nunjucks",
 					value: expected.nunjucks,
 					argument: null,
-					mime: "html"
+					mime: "text/plain"
 				},
 				// Yaml - testing yaml directive
 				{
 					name: "yaml",
-					value: expected.yaml,
+					value: JSON.stringify(expected.yaml),
 					argument: "salve",
 					mime: "application/json"
 				},
 				// Words - testing "out: property" directive
 				{
 					name: "words",
-					value: expected.words["1"],
+					value: JSON.stringify(expected.words["1"]),
 					argument: "1",
 					mime: "application/json"
 				},
@@ -91,7 +91,7 @@ describe("App", function() {
 				// DB - testing custom directive
 				{
 					name: "db",
-					value: expected.db,
+					value: JSON.stringify(expected.db),
 					argument: null,
 					mime: "application/json"
 				},
@@ -122,7 +122,11 @@ describe("App", function() {
 								appPromise.then(function(){
 									appTest.getResource(request.name, request.argument).then(function(out){
 										// Assert that output data is equal to expected value
-										assert.equal(out.data, request.value);
+										if (request.name == "words") {
+											//console.log(out);
+										}
+										assert.strictEqual(out.data, request.value);
+										assert.strictEqual(out.lType, request.mime);
 										done();
 									}).catch(function(error){
 										done(error);

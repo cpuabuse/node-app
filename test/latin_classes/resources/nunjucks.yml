@@ -2,6 +2,7 @@
 - njk:
     path: ./
     name: words.njk
+    type: text/plain
   with:
   - in:
   - raw: '{"qui":"Mundi"}'

@@ -32,21 +32,21 @@ const methods = {
 		let absolutePath = await resource.root.parent.system.file.join(resource.root.parent.system.rootDir, relativePath);
 		let filePath = await resource.root.parent.system.file.join(absolutePath, operation.custom.name);
 		operation._out = {
-			data: await require(filePath)(resource, operation), /* eslint-disable-line global-require */// In-line require suits the needs and logic
+			data: JSON.stringify(await require(filePath)(resource, operation)), /* eslint-disable-line global-require */// In-line require suits the needs and logic
 			pType: "??",
-			lType: "??"
+			lType: "application/json"
 		}
 	},
 	async file(resource, operation){
 		let filePath = await resource.root.parent.system.file.join(resource.root.parent.settings.folders.file, operation.file.path);
 		let lType;
 		switch(path.parse(operation.file.name).ext){
-			case ".yml":
 			case ".md":
 			case ".njk":
 			case ".scss":
 				lType = "text/plain";
 				break;
+			case ".yml":
 			case ".json":
 				lType = "application/json";
 				break;
@@ -100,14 +100,14 @@ const methods = {
 		operation._out = {
 			data: await resource.root.parent.app.njk(path, operation.njk.name, operation.hasOwnProperty("_with") ? operation._with : null),
 			pType: "string",
-			lType: "string??"
+			lType: operation.njk.type
 		};
 	},
 	async yml(resource, operation){
 		operation._out = {
 			data: await resource.root.parent.app.yml(operation._with),
-			pType: "string",
-			lType: "string"
+			pType: "object",
+			lType: "application/json"
 		}
 	},
 	async raw(resource, operation){ /* eslint-disable-line require-await */// Preserving async throught directives
@@ -169,7 +169,7 @@ const methods = {
 						/* Every object has a toString() method that is automatically called when the object is to be represented as a text value...
 						https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/toString#Description */
 						return {
-							data: (result.data.hasOwnProperty(operation._with) ? result.data[operation._with] : "").toString(),
+							data: JSON.stringify((result.data.hasOwnProperty(operation._with) ? result.data[operation._with] : "")),
 							lType: result.lType,
 							pType: result.pType
 						}
