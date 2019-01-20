@@ -1,7 +1,10 @@
 language: node_js
 node_js:
-  - "11"
-  - "10"
+  - '11'
+  - '10'
+os:
+  - linux
+  - osx
 jobs:
   include:
   - stage: Post test
@@ -9,17 +12,17 @@ jobs:
     node_js: '11'
     script: echo "Deploying..."
     deploy:
-      email: "cpuabuse@gmail.com"
+      email: cpuabuse@gmail.com
       provider: npm
       api_key:
-        secure: 1gk2WMYh9U4vOTIdt0boXvdhJ8s9x+aKwyQo9OWHbV4DHh4nrPzeNv+/1k83C2ze501zQIJYFH3Mdn+0dkf1wvMDo1Wp2x7+S2ByNS4bfyRSrcK8RHs/860alx5+Z9T+oEJUHt81qehUNclztBz2X4F9Fmx7MAyQDKfalcPmKM8ezgRuGaZhl54citmXgGtbgIEt4uF9ABY9bMHtfiSqkNNkRuwv5dNWyUrZsX0RXAnt4E7/ZuqhoI/Esf8+2rj/0G+TJDG4Kdwck+w7oPmNuHhj+T2AK4df/ltW4BlJoh68LCizlBqf48TyFJ/Qf4TePPJQLXfG0huM3GusyNB2Aw7XBPtn7lQTM5k3qwbn9WFL9SRwwdwya27HCLaFNoZAMlaCMJdAlC/f0DwIVGhPZh1Rx59MScSsftceBo7dXTwB1jKQj23lWVJrF2Dsb16HlMEjgYccu4mopsy48FJK6ugJ+ZhKg+T+a5AEp+rxg5SFsTe2opg4NlsJks76wZLVvZYLXI77E6FEQXbj09EnhDeEzKRvBhX/v292P1w5rkiUDeKW2mfDCpp4mbeOIDWbixQ+qlX/sHNDEt8dw+uGklHWrqDDsAbtodfkPEQVIqJX7jUhWvJE/EsfATUMLY25aL3qR560DeZ3ksrz+xPbqZRJcFeFKaBdHWJN9lfOBl8=
+        secure: tBnYfoRC7J3UEeRf+Tum7k8uW1vJo/CuOL5kZ5m46NlFfIk2O2hlyVw+X5vo+h/EHdNHSWmNldgkMHLhazfg247cujoRACDnUWVzWZ51Nigu2bpijC7K1OB7mqqoqC7zcB2yJ/m3QFBprnxnRXFuW9MCGCOGW9deUb6h3VGS2+1MP2XlzuED/HwqTJPi1Hz0MoEkWWLkc0VLN/zh6EuAMHUaMl+n63WttYIioNqkbieJBmn3pZwwa7lyBrBfly9PGOyUoA8TKwPMubaOvxyvfARpVCcG0akgW5E/+Y5ZtCNrlLSadb8uTnmSjYsv5o4T2KFqH9Q96n0M3VmKwrsaLs7jFTrOtYwj5zI5/3ToNLxHKI7xL0gp+osmBtC/AwtAuPzs0ybCN44nzrCj3ywmYdTXL2oLVJcQ+ZI5gWSpZWoCvWmTSq30yIzQAVQ1DzBpnt8g0Jw8XxA2Fo9ZdDTb9ewyYTr/OkSAvMeR84QZY+mgBtidFGdk4zfhku+GpXzhXY0hBqf3y+CkYfB4cl6G6dGhPfbZligQkonW7n9tZOmxFxT145qG6VOEWAs4r5aPmlkMMxqNhAaCxcBVoC61VJjJ4S8cnXQNmqkuGn/B6TxB57IF7MYUUCxWTkFiO71fH4KtZ02U8SL+btuFmKsMO+q4vzzqs7g4xjMHqpfHWiU=
       on:
         branch: dev
       tag: next
   - name: coverage
     node_js: '11'
     script:
-    - |
+    - |-
       # Coverage
       npm run coverage
       cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js

@@ -195,7 +195,9 @@ const methods = {
 				}
 			} else {
 				resource.out = {
-					data: data.length > 1 ? data.join("") : operation.out === "object" ? data[0] : data[0].toString()
+					data: data.length > 1 ? data.join("") : operation.out === "object" ? data[0] : data[0].toString(),
+					lType: hint,
+					pType: "string"
 				}
 			}
 		});

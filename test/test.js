@@ -43,56 +43,65 @@ describe("App", function() {
 				{
 					name: "index",
 					value: expected.index,
-					argument: null
+					argument: null,
+					mime: "html"
 				},
 				// Markdown - testing markdown directive
 				{
 					name: "markdown",
 					value: expected.markdown,
-					argument: null
+					argument: null,
+					mime: "html"
 				},
 				// Secret recipe - testing multiple directives sequence
 				{
 					name: "secret_recipe",
 					value: expected.secretRecipe,
-					argument: null
+					argument: null,
+					mime: "html"
 				},
 				// Nunjucks - testing nunjucks directive
 				{
 					name: "nunjucks",
 					value: expected.nunjucks,
-					argument: null
+					argument: null,
+					mime: "html"
 				},
 				// Yaml - testing yaml directive
 				{
 					name: "yaml",
 					value: expected.yaml,
-					argument: "salve"
+					argument: "salve",
+					mime: "application/json"
 				},
 				// Words - testing "out: property" directive
 				{
 					name: "words",
 					value: expected.words["1"],
-					argument: "1"
+					argument: "1",
+					mime: "application/json"
 				},
 				// CSS - testing scss directive
 				{
 					name: "css",
 					value: expected.css,
-					argument: null
+					argument: null,
+					mime: "text/css"
 				},
 				// DB - testing custom directive
 				{
 					name: "db",
 					value: expected.db,
-					argument: null
+					argument: null,
+					mime: "application/json"
 				},
 				// Image - testing image composing
 				{
 					name: "image",
 					value: require("fs").readFileSync("test/latin_classes/file/img/opengl_vulkan.png"),
-					argument: null
-				},
+					argument: null,
+					mime: "image/png"
+				}
 			]
 		}
 	];
