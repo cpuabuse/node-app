@@ -34,7 +34,7 @@ const methods = {
 		operation._out = {
 			data: JSON.stringify(await require(filePath)(resource, operation)), /* eslint-disable-line global-require */// In-line require suits the needs and logic
 			pType: "??",
-			lType: "application/json"
+			lType: operation.custom.type
 		}
 	},
 	async file(resource, operation){
@@ -158,8 +158,8 @@ const methods = {
 					data = rawData.map(function(operation){
 						return {
 							data: JSON.parse(operation.data),
-							lType: "application/json",
-							pType: "Object"
+							lType: operation.lType,
+							pType: "object"
 						}
 					});
 					break;

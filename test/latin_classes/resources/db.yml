@@ -2,4 +2,5 @@
 - custom:
     path: ./
     name: db.js
+    type: application/json
 - out: raw
