@@ -18,6 +18,7 @@ jobs:
         secure: tBnYfoRC7J3UEeRf+Tum7k8uW1vJo/CuOL5kZ5m46NlFfIk2O2hlyVw+X5vo+h/EHdNHSWmNldgkMHLhazfg247cujoRACDnUWVzWZ51Nigu2bpijC7K1OB7mqqoqC7zcB2yJ/m3QFBprnxnRXFuW9MCGCOGW9deUb6h3VGS2+1MP2XlzuED/HwqTJPi1Hz0MoEkWWLkc0VLN/zh6EuAMHUaMl+n63WttYIioNqkbieJBmn3pZwwa7lyBrBfly9PGOyUoA8TKwPMubaOvxyvfARpVCcG0akgW5E/+Y5ZtCNrlLSadb8uTnmSjYsv5o4T2KFqH9Q96n0M3VmKwrsaLs7jFTrOtYwj5zI5/3ToNLxHKI7xL0gp+osmBtC/AwtAuPzs0ybCN44nzrCj3ywmYdTXL2oLVJcQ+ZI5gWSpZWoCvWmTSq30yIzQAVQ1DzBpnt8g0Jw8XxA2Fo9ZdDTb9ewyYTr/OkSAvMeR84QZY+mgBtidFGdk4zfhku+GpXzhXY0hBqf3y+CkYfB4cl6G6dGhPfbZligQkonW7n9tZOmxFxT145qG6VOEWAs4r5aPmlkMMxqNhAaCxcBVoC61VJjJ4S8cnXQNmqkuGn/B6TxB57IF7MYUUCxWTkFiO71fH4KtZ02U8SL+btuFmKsMO+q4vzzqs7g4xjMHqpfHWiU=
       on:
         branch: dev
+        tags: true
       tag: next
   - name: coverage
     node_js: '11'

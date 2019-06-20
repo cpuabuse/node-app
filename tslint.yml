@@ -1,0 +1,85 @@
+extends:
+  - tslint:recommended
+rules:
+  # Requires using either ‘T[]’ or ‘Array' for arrays.
+  # Easier to read.
+  array-type: false
+
+  # An interface or literal type with just a call signature can be written as a function type.
+  # Preferring interfaces over types for function types.
+  callable-types: false
+
+  # Enforces JSDoc comments for important items be filled out.
+  # Rule is annoying for literal types, so everything but "properties".
+  completed-docs:
+    - true
+    - classes
+    - enums
+    - enum-members
+    - functions
+    - interfaces
+    - methods
+    - namespaces
+    - types
+    - variables
+
+  # Enforces indentation with tabs or spaces.
+  # Using tabs, false as managed by prettier.
+  indent: false
+
+  # Requires interface names to begin with a capital ‘I’.
+  # Not used by convention.
+  interface-name: false
+
+  # Enforces member ordering.
+  # Sort everything.
+  member-ordering:
+    - true
+    - order: fields-first
+      alphabetize: true
+
+  # A file may not contain more than the specified number of classes.
+  # Let programmer decide.
+  max-classes-per-file: false
+
+  # Requires lines to be under a certain max length.
+  # Wrap text.
+  max-line-length: false
+
+  # Bans the use of specified console methods.
+  # Managed by ESLint.
+  no-console: false
+
+  # Disallows bitwise operators.
+  # Managed by ESLint.
+  no-bitwise: false
+
+  # Disallows traditional (non-arrow) function expressions.
+  # We use normal function by default.
+  only-arrow-functions: false
+
+  # Requires that import statements be alphabetized and grouped.
+  # Managed by ESLint
+  ordered-imports: false
+
+  # Requires that variable declarations use const instead of let and var if possible.
+  # Managed by ESLint.
+  prefer-const: false
+
+  # Requires type definitions to exist.
+  # We want all types.
+  typedef:
+    - true
+    - call-signature
+    - arrow-call-signature
+    - parameter
+    - arrow-parameter
+    - property-declaration
+    - variable-declaration
+    - member-variable-declaration
+    - object-destructuring
+    - array-destructuring
+
+  # Requires or disallows trailing commas in array and object literals, destructuring assignments, function typings, named imports and exports and function parameters.
+  # No tralining commas.
+  trailing-comma: false
