@@ -1,0 +1,49 @@
+// A duplicate only of tslint.yml for Codacy
+{
+	"extends": ["tslint:recommended"],
+	"rules": {
+		"array-type": false,
+		"callable-types": false,
+		"completed-docs": [
+			true,
+			"classes",
+			"enums",
+			"enum-members",
+			"functions",
+			"interfaces",
+			"methods",
+			"namespaces",
+			"types",
+			"variables"
+		],
+		"indent": false,
+		"interface-name": false,
+		"member-ordering": [
+			true,
+			{
+				"order": "fields-first",
+				"alphabetize": true
+			}
+		],
+		"max-classes-per-file": false,
+		"max-line-length": false,
+		"no-console": false,
+		"no-bitwise": false,
+		"only-arrow-functions": false,
+		"ordered-imports": false,
+		"prefer-const": false,
+		"typedef": [
+			true,
+			"call-signature",
+			"arrow-call-signature",
+			"parameter",
+			"arrow-parameter",
+			"property-declaration",
+			"variable-declaration",
+			"member-variable-declaration",
+			"object-destructuring",
+			"array-destructuring"
+		],
+		"trailing-comma": false
+	}
+}

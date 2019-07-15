@@ -42,12 +42,12 @@ rules:
 
   # Disallow Magic Numbers.
   # We should use consts.
-  no-magic-numbers: 
+  no-magic-numbers:
     - error
     - ignore:
-      - 0
-      - 1
-      - -1
+        - 0
+        - 1
+        - -1
 
   # Disallow the unary operators ++ and --.
   # Always.
