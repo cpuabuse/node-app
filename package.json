@@ -1,10 +1,11 @@
 {
+	"license": "ISC",
 	"name": "cpuabuse-app",
 	"version": "0.2.2",
 	"description": "App module",
 	"main": "src/app.js",
 	"dependencies": {
-		"cpuabuse-system": "^0.6.0",
+		"cpuabuse-system": "^0.6.2",
 		"jimp": "^0.6.4",
 		"markdown-it": "^8.4.2",
 		"node-sass": "^4.12.0",

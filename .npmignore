@@ -10,8 +10,9 @@
 coverage
 CODEOWNERS
 docs
+issue_label_bot.yaml
 issue_template.md
 node_modules
 package-lock.json
-pull_request_template.md
+tslint.json
 tslint.yml

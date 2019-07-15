@@ -2,10 +2,8 @@
 /*
 	Contains rather large expected assertion constants for testing.
 */
-"use strict";
 
-const index =
-`<!doctype html>
+const index = `<!doctype html>
 <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="/style.css">
@@ -20,18 +18,16 @@ const index =
 	</body>
 </html>`;
 
-const markdown =
-`<h1>Latin</h1>
+const markdown = `<h1>Latin</h1>
 <h2>About</h2>
 <p>Latin was originally spoken in the area surrounding Rome, known as Latium.</p>
 <h2>How</h2>
 <p>Through the power of the Roman Republic, it became the dominant language, initially in Italy and subsequently throughout the western Roman Empire.</p>
 <h2>What</h2>
 <p>Vulgar Latin developed into the Romance languages, such as Italian, Portuguese, Spanish, French, and Romanian.</p>
-`
+`;
 
-const secretRecipe =
-`<p>Cake is made of:</p>
+const secretRecipe = `<p>Cake is made of:</p>
 <ul>
 <li>Flour</li>
 <li>Sugar</li>
@@ -41,7 +37,7 @@ const secretRecipe =
 <li>Cocoa</li>
 <li>Sesame seeds</li>
 </ul>
-<p>Very delicious!</p>`
+<p>Very delicious!</p>`;
 
 const nunjucks = "Salve, Mundi!";
 
@@ -64,10 +60,9 @@ const words = {
 		q: "perculsus",
 		a: "shock"
 	}
-}
+};
 
-const css =
-`body {
+const css = `body {
   font: 100% Helvetica, sans-serif;
   color: #333; }
 `;
@@ -100,4 +95,4 @@ module.exports = {
 	words,
 	css,
 	db
-}
+};

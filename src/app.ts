@@ -3,7 +3,6 @@
  * Creates an app based on System instance.
  * @module app
  */
-"use strict";
 const system = require("cpuabuse-system");
 const app_initDir = "settings";
 const app_initFilename = "init";
@@ -19,12 +18,11 @@ const resource = require("./resource.js");
  * @param {string} rootDir App root directory
  * @param {string} logging Type of logging used
  */
-class App extends system.System{
-	constructor (id, rootDir, logging, appLoadCallback){
-
+class App extends system.System {
+	constructor(id, rootDir, logging, appLoadCallback) {
 		// Call parents constructor with the default parameters for the App
 		let allBehaviors = behaviors;
-		allBehaviors.push({"app_load": appLoadCallback});
+		allBehaviors.push({ app_load: appLoadCallback });
 
 		super(
 			{
@@ -38,8 +36,12 @@ class App extends system.System{
 		);
 	}
 
-	getResource(resourceName, inData){
-		var resourceContext = new resource.ResourceContext(this, resourceName, inData);
+	getResource(resourceName, inData) {
+		var resourceContext = new resource.ResourceContext(
+			this,
+			resourceName,
+			inData
+		);
 		return resourceContext.process();
 	}
 }
